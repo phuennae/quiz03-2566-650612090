@@ -6,6 +6,8 @@ import { NextResponse } from "next/server";
 export const GET = async (request) => {
   readDB();
 
+  c
+
   // return NextResponse.json(
   //   {
   //     ok: false,
@@ -40,23 +42,26 @@ export const POST = async (request) => {
 export const DELETE = async (request) => {
   const payload = checkToken();
 
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: "Invalid token",
-  //   },
-  //   { status: 401 }
-  // );
-
+  if (payload.role != "SUPER_ADMIN") {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Invalid token",
+      },
+      { status: 401 }
+    );
+  }
   readDB();
 
-  // return NextResponse.json(
-  //   {
-  //     ok: false,
-  //     message: "Message is not found",
-  //   },
-  //   { status: 404 }
-  // );
+  if (payload.messageId != DB.messageId) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: "Message is not found",
+      },
+      { status: 404 }
+    );
+  }
 
   writeDB();
 
